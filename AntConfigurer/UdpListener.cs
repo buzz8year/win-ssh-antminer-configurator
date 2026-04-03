@@ -69,7 +69,6 @@ namespace AntConfigurer
             
             // var log = (TextBox)(Winform.Controls.Find("log_box", true)[0]);
             // TextBox log = (TextBox)(Winform.Controls.Find("log_box", true)[0]);            
-
             Log.Invoke(new Action(() => Log.AppendText("Received data UDP datagram from " + remoteIp + "\r\n")));
 
             if (receiveBytes.SequenceEqual(ok))
@@ -84,7 +83,6 @@ namespace AntConfigurer
                     item.Confirmed = true;                    
                    
                     Log.Invoke(new Action(() => Log.AppendText("ASIC with IP " + remoteIp + " was confirmed\r\n")));
-
                     return;
                 } 
                 else Log.Invoke(new Action(() => Log.AppendText("Received malformed request from IP " + remoteIp + "\r\n")));
@@ -125,7 +123,6 @@ namespace AntConfigurer
                     return;
                 }
             }
-
             // UdpListener.udpClient.BeginReceive(new AsyncCallback(UdpListener.ReceiveCallback), null);
         }
         
