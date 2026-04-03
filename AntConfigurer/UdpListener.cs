@@ -25,9 +25,7 @@ namespace AntConfigurer
         public static void Start()
         {
             if (UdpListener.Listening)
-            {
                 return;
-            }
 
             UdpListener.Data = new String[] { "", "" };
 
@@ -42,26 +40,20 @@ namespace AntConfigurer
 
             UdpListener.UdpClient.BeginReceive(new AsyncCallback(UdpListener.ReceiveCallback), null);
             UdpListener.Listening = true;
-
         }
 
         public static void Stop()
         {
             if (!UdpListener.Listening)
-            {
                 return;
-            }
 
             UdpListener.Listening = false;
-
         }
 
         public static void ReceiveCallback(IAsyncResult result)
         {
             if (!UdpListener.Listening)
-            {
                 return;
-            }
 
             UdpListener.UdpClient.BeginReceive(new AsyncCallback(UdpListener.ReceiveCallback), null);
 
@@ -75,8 +67,8 @@ namespace AntConfigurer
             var endpoint = UdpListener.RemoteIpEndPoint;
             var remoteIp = endpoint.Address.ToString();
             
-            // var log = (TextBox)(winform.Controls.Find("log_box", true)[0]);
-            // TextBox log = (TextBox)(winform.Controls.Find("log_box", true)[0]);            
+            // var log = (TextBox)(Winform.Controls.Find("log_box", true)[0]);
+            // TextBox log = (TextBox)(Winform.Controls.Find("log_box", true)[0]);            
 
             Log.Invoke(new Action(() => Log.AppendText("Received data UDP datagram from " + remoteIp + "\r\n")));
 
@@ -95,10 +87,7 @@ namespace AntConfigurer
 
                     return;
                 } 
-                else
-                {
-                    Log.Invoke(new Action(() => Log.AppendText("Received malformed request from IP " + remoteIp + "\r\n")));
-                }
+                else Log.Invoke(new Action(() => Log.AppendText("Received malformed request from IP " + remoteIp + "\r\n")));
             } 
             else
             {
@@ -130,10 +119,7 @@ namespace AntConfigurer
                         byte[] sendBuffer = Encoding.ASCII.GetBytes(data[1]);
                         UdpListener.UdpClient.Send(sendBuffer, sendBuffer.Length, endPoint);
                     } 
-                    else
-                    {
-                        Console.WriteLine("Duplicate");
-                    }
+                    else Console.WriteLine("Duplicate");
 
                     // UdpListener.udpClient.BeginReceive(new AsyncCallback(UdpListener.ReceiveCallback), null);
                     return;

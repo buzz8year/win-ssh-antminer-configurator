@@ -12,9 +12,7 @@ namespace AntConfigurer
         public static void Start()
         {
             if (AsicDiscoverer.Parsing)
-            {
                 return;
-            }
         }
 
         public static void Stop() {}

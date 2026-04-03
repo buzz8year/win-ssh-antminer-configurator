@@ -30,31 +30,28 @@ namespace AntConfigurer
 
             var deviceTable = device_list_table;
             var hnameUploadTable = hostname_upload_panel;
-
-
-            //device_table.Controls.Clear();
+            
+            // device_table.Controls.Clear();
 
             if (currentListenerState)
             {
                 pingator_button.Enabled = true;
-                //UDP listener already running. We need to halt execution and dump the results
+                
+                // UDP listener already running. We need to halt execution and dump the results
                 log.AppendText("Halting IP reporting tool...\r\n");
                 UdpListener.Stop();
+                
                 log.AppendText("IP reporting tool halted\r\n");
                 button.Text = "Search for devices";
 
-                //Clearing out old data
+                // Clearing out old data
                 while (deviceTable.Controls.Count > 0)
-                {
                     deviceTable.Controls[0].Dispose();
-                }
 
                 while (hnameUploadTable.Controls.Count > 0)
-                {
                     hnameUploadTable.Controls[0].Dispose();
-                }
 
-                //Resetting styles
+                // Resetting styles
                 deviceTable.RowCount = 0;
                 deviceTable.ColumnCount = 6;
                 deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));//Checkbox row
@@ -63,17 +60,16 @@ namespace AntConfigurer
                 deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC Received IP
                 deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC MAC Addr
                 deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//ASIC Confirmed
-                //device_table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, F));//ASIC Confirmed
+                // device_table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, F));//ASIC Confirmed
 
                 deviceTable.RowCount = deviceTable.RowCount + 1;
                 deviceTable.RowStyles.Add(new RowStyle(SizeType.AutoSize, 15F));
-                //device_table.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
+                // device_table.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
                 
                 var allSelect = new CheckBox
                 {
                     Name = "select_all_devices_checkbox"
                 };
-                
                 allSelect.Click += new System.EventHandler(this.All_select_click);
 
                 deviceTable.Controls.Add(allSelect, 0, deviceTable.RowCount - 1);
@@ -86,13 +82,13 @@ namespace AntConfigurer
                 hnameUploadTable.RowCount = 0;
                 hnameUploadTable.ColumnCount = 7;
 
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//Num row
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//Num row
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC Detected IP
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC Received IP
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC MAC Addr
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//ASIC Confirmed
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));//ASIC hostname
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Num Row
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Num Row
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // ASIC Detected IP
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // ASIC Received IP
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // ASIC MAC Addr
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // ASIC Confirmed
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F)); // ASIC Hostname
 
                 hnameUploadTable.RowCount = hnameUploadTable.RowCount + 1;
                 hnameUploadTable.RowStyles.Add(new RowStyle(SizeType.AutoSize, 30F));
@@ -101,7 +97,6 @@ namespace AntConfigurer
                 {
                     Name = "select_all_devices_hname_checkbox"
                 };
-
                 allSelectHname.Click += new System.EventHandler(this.All_select_hname_click);
 
                 hnameUploadTable.Controls.Add(allSelectHname, 0, hnameUploadTable.RowCount - 1);
@@ -111,25 +106,22 @@ namespace AntConfigurer
                 hnameUploadTable.Controls.Add(new Label() { Text = "Mac addr" }, 4, hnameUploadTable.RowCount - 1);
                 hnameUploadTable.Controls.Add(new Label() { Text = "Device confirmed" }, 5, hnameUploadTable.RowCount - 1);
                 hnameUploadTable.Controls.Add(new Label() { Text = "ASIC hostname" }, 6, hnameUploadTable.RowCount - 1);
-
-
-
+                
                 var foundDevices = UdpListener.GetDevices();
 
-#if DEBUG
-                for (var i = 0; i < 20; i++)
-                {
-                    var testDevice = new AsicDevice
+                #if DEBUG
+                    for (var i = 0; i < 20; i++)
                     {
-                        Confirmed = true,
-                        IpAddr = "109.234.34.6",
-                        MacAddr = "0F:89:33:A1:04",
-                        RealIpAddr = "109.234.34.6"
-                    };
-
-                    foundDevices.Add(testDevice);
-                }
-#endif
+                        var testDevice = new AsicDevice
+                        {
+                            Confirmed = true,
+                            IpAddr = "109.234.34.6",
+                            MacAddr = "0F:89:33:A1:04",
+                            RealIpAddr = "109.234.34.6"
+                        };
+                        foundDevices.Add(testDevice);
+                    }
+                #endif
 
                 foreach (var device in foundDevices)
                 {
@@ -176,7 +168,6 @@ namespace AntConfigurer
                 button.Text = "Halt search";
 
                 pingator_button.Enabled = false;
-
                 UdpListener.Start();
             }
         }
@@ -192,10 +183,9 @@ namespace AntConfigurer
                 if (control.ToString().StartsWith("System.Windows.Forms.CheckBox"))
                 {
                     var chkbx = control as CheckBox;
+                    
                     if (!chkbx.Name.Equals("select_all_devices_checkbox"))
-                    {
                         chkbx.Checked = isChecked;
-                    }
                 }
             }
         }
@@ -211,10 +201,9 @@ namespace AntConfigurer
                 if (control.ToString().StartsWith("System.Windows.Forms.CheckBox"))
                 {
                     var chkbx = control as CheckBox;
+                    
                     if (!chkbx.Name.Equals("select_all_devices_hname_checkbox"))
-                    {
                         chkbx.Checked = isChecked;
-                    }
                 }
             }
         }
@@ -223,12 +212,11 @@ namespace AntConfigurer
         {
             var btn = sender as Button;
 
-            String ipAddress = ds_ip_address.Text,
-                   login = ds_username.Text,
-                   pass = ds_password.Text;//idQ6Jk5XEPAqp8tg
+            String ipAddress = ds_ip_address.Text;
+            String login = ds_username.Text;
+            String pass = ds_password.Text; // idQ6Jk5XEPAqp8tg
 
-
-            //Validating an IP address
+            // Validating an IP address
             if (!Strings.ValidateIpV4(ipAddress))
             {
                 var errorsAsString = String.Join(Environment.NewLine, Strings.GetLastErrors());
@@ -236,17 +224,16 @@ namespace AntConfigurer
                 return;
             }
 
-            //Validating login
+            // Validating login
             if (String.IsNullOrWhiteSpace(login))
             {
                 MessageBox.Show("Login is not provided", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
             uploader_state_tb.Text = "";
 
-            //Password is not required, so, we'll skip check
-            //And will check ASIC pool settings
+            // Password is not required, so, we'll skip check
+            // And will check ASIC pool settings
             var tabControls = direct_connect_tab.Controls;
             List<ConfigElement> configs = new List<ConfigElement>();
             
@@ -255,7 +242,6 @@ namespace AntConfigurer
                 String poolUrl = tabControls.Find("ds_url_" + i, true)[0].Text,
                        poolUser = tabControls.Find("ds_user_" + i, true)[0].Text,
                        poolWorkerName = tabControls.Find("ds_worker_" + i, true)[0].Text,
-                       // Asic hostname
                        poolPass = tabControls.Find("ds_pass_" + i, true)[0].Text;
 
                 var config = new ConfigElement();
@@ -267,14 +253,10 @@ namespace AntConfigurer
                     MessageBox.Show(errorsAsString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                else
-                {
-                    configs.Add(config);
-                }
+                else configs.Add(config);
             }
 
-            //Ok, all configs are set and verified. Let's convert them tho JSON and check connection to our device
-
+            // All configs are set and verified. Let's convert them to JSON and check the connection to our device
             SshConnector connector = new SshConnector();
             connector.SetIpAddress(ipAddress).SetUsername(login).SetPassword(pass);
 
@@ -287,10 +269,9 @@ namespace AntConfigurer
             else
             {
                 var result = connector.UploadConfig(configs);
+                
                 foreach (String line in result)
-                {
                     uploader_state_tb.AppendText(line + "\r\n");
-                }
             }
         }
 
@@ -299,7 +280,7 @@ namespace AntConfigurer
             var btn = sender as Button;
             var otherControls = device_list_table.Controls;
 
-            //Locking button
+            // Locking button
             btn.Enabled = false;
 
             List<CheckBox> checkboxes = new List<CheckBox>();
@@ -311,9 +292,7 @@ namespace AntConfigurer
                     var chkbx = control as CheckBox;
                     
                     if (!chkbx.Name.Equals("select_all_devices_checkbox") && chkbx.Checked)
-                    {
                         checkboxes.Add(chkbx);
-                    }
                 }
             }
 
@@ -325,8 +304,8 @@ namespace AntConfigurer
             }
 
             dl_stat_box.Text = "";
-
             List<String> ips = new List<string>();
+            
             foreach (CheckBox chkbx in checkboxes)
             {
                 var spliitedName = chkbx.Name.Split('_');
@@ -334,14 +313,11 @@ namespace AntConfigurer
 
                 var ipLabel = device_list_table.GetControlFromPosition(3, index) as Label;
                 String ipAddress = ipLabel.Text;
+                
                 if (!Strings.ValidateIpV4(ipAddress))
-                {
                     dl_stat_box.AppendText("Couldn't parse an ip. IP was " + ipAddress + "\r\n");
-                }
-                else
-                {
-                    ips.Add(ipAddress);
-                }
+                
+                else ips.Add(ipAddress);
             }
 
             if (ips.Count < 1)
@@ -351,8 +327,8 @@ namespace AntConfigurer
                 return;
             }
 
-            String login = dev_list_login.Text,
-                   pass = dev_list_pass.Text;
+            String login = dev_list_login.Text;
+            String pass = dev_list_pass.Text;
 
             if (String.IsNullOrWhiteSpace(login))
             {
@@ -371,8 +347,8 @@ namespace AntConfigurer
                 btn.Enabled = true;
                 return;
             }
-
             var selectedLocation = asics_location.SelectedIndex;
+            
             if (shouldNotify)
             {
                 if (selectedLocation < 1)
@@ -384,13 +360,11 @@ namespace AntConfigurer
                 }
             }
 
-            String commonHostname = ds_common_hostname.Text,
-                   commonHostnamePref = dl_common_hname_pref.Text;
+            String commonHostname = ds_common_hostname.Text;
+            String commonHostnamePref = dl_common_hname_pref.Text;
 
             if (!String.IsNullOrWhiteSpace(commonHostnamePref))
-            {
                 commonHostname = commonHostnamePref + commonHostname;
-            }
 
             var tabControls = devices_tab.Controls;
             List<ConfigElement> configs = new List<ConfigElement>();
@@ -405,7 +379,12 @@ namespace AntConfigurer
                        poolPass = tabControls.Find("dl_pass_" + i, true)[0].Text;
 
                 var config = new ConfigElement();
-                config.SetUrl(poolUrl).SetWorker(poolWorkerName).SetPass(poolPass).SetUsername(poolUser).SetPrefix(poolWorkerPreffix).SetSuffix(poolWorkerSuffix);
+                config.SetUrl(poolUrl)
+                    .SetWorker(poolWorkerName)
+                    .SetPass(poolPass)
+                    .SetUsername(poolUser)
+                    .SetPrefix(poolWorkerPreffix)
+                    .SetSuffix(poolWorkerSuffix);
 
                 if (!config.Check(true, true))
                 {
@@ -414,20 +393,20 @@ namespace AntConfigurer
                     btn.Enabled = true;
                     return;
                 }
-                else
-                {
-                    configs.Add(config);
-                }
+                else configs.Add(config);
             }
 
-            //Ok, should we override old settings or just skip them if bmmine.conf.backup exists?
+            // Should we override old settings or just skip them if bmmine.conf.backup exists?
             Boolean overrideOld = override_old_settings.Checked;
-            String overriderText = overrideOld ? "Old configs will be replaced\r\n" : "Program will skip device if bmmine.conf.backup exists\r\n";
+            
+            String overriderText = overrideOld 
+                ? "Old configs will be replaced\r\n" 
+                : "Program will skip device if bmmine.conf.backup exists\r\n";
 
             dl_stat_box.AppendText(overriderText);
             dl_stat_box.AppendText("Ok, checklist passed. Starting config upload...\r\n");
             
-            //Dictionary<String, List<CompletedConfig>> uploaded_configs = new Dictionary<string, List<CompletedConfig>>();
+            // Dictionary<String, List<CompletedConfig>> uploaded_configs = new Dictionary<string, List<CompletedConfig>>();
             List<CompletedConfig> configs2Server = new List<CompletedConfig>();
             
             foreach (String currentIp in ips)
@@ -436,7 +415,11 @@ namespace AntConfigurer
                 {
                     dl_stat_box.AppendText("Processing ASIC with IP " + currentIp + ". Checking connection...\r\n");
                     SshConnector connector = new SshConnector();
-                    connector.SetIpAddress(currentIp).SetUsername(login).SetPassword(pass).SetCommonHname(commonHostname);
+                    
+                    connector.SetIpAddress(currentIp)
+                        .SetUsername(login)
+                        .SetPassword(pass)
+                        .SetCommonHname(commonHostname);
 
                     if (!connector.Connect())
                     {
@@ -444,32 +427,30 @@ namespace AntConfigurer
                         dl_stat_box.AppendText(errorsAsString + "\r\n");
                         continue;
                     }
-
                     dl_stat_box.AppendText("Connection established. Starting config upload to " + currentIp + "\r\n");
-                    /*foreach (ConfigElement config in configs)
-                    {
+                    
+                    /*
+                    foreach (ConfigElement config in configs)
                         config.SetAsicIp(_current_ip).GenerateWorkerName(_current_ip);
-                    }*/
+                    */
                     var result = connector.UploadConfig(configs, overrideOld);
+                    
                     foreach (String line in result)
-                    {
                         dl_stat_box.AppendText(line + "\r\n");
-                    }
 
                     if (connector.GetShouldNotifyMonitoring() && connector.GetLastFullConfig() != null)
-                    {
                         configs2Server.Add(connector.GetLastFullConfig());
-                    }
                 }
                 catch (Exception exc)
                 {
                     var errorsAsString = "Uncatched error has occured while processing " + currentIp + ". Error was: " + exc.Message + ". Stack trace: " + exc.StackTrace + "\r\n";
-                    //MessageBox.Show(errors_as_string, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // MessageBox.Show(errors_as_string, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
                     dl_stat_box.AppendText(errorsAsString);
                 }
             }
 
-            //Starting upload configs to server, if we have any
+            // Starting upload configs to server if we have any
             if (shouldNotify && configs2Server.Count > 0)
             {
                 dl_stat_box.AppendText("Sending data to monitoring system...\r\n");
@@ -477,20 +458,18 @@ namespace AntConfigurer
                 
                 foreach (CompletedConfig conf in configs2Server)
                 {
-                    //converted_configs.Add(new JsonDevice(conf));
+                    // converted_configs.Add(new JsonDevice(conf));
                     var jsonDevice = new JsonDevice(conf);
+                    
                     jsonDevice.Location = selectedLocation.ToString();
                     convertedConfigs.Add(jsonDevice);
                 }
 
                 var jsonString = JsonConvert.SerializeObject(convertedConfigs);
-
                 dl_stat_box.AppendText("Upload completed!\r\n");
 
                 if (!url.StartsWith("http://") && !url.StartsWith("https://"))
-                {
                     url = "http://" + url;
-                }
 
                 using (var client = new WebClient())
                 {
@@ -505,9 +484,7 @@ namespace AntConfigurer
                         var responseString = Encoding.UTF8.GetString(response);
 
                         if (String.IsNullOrWhiteSpace(responseString))
-                        {
                             throw new Exception("Empty server response received");
-                        }
 
                         dynamic parsedString = JsonConvert.DeserializeObject(responseString);
 
@@ -526,7 +503,6 @@ namespace AntConfigurer
                     }
                 }
             }
-
             btn.Enabled = true;
         }
 
@@ -566,11 +542,9 @@ namespace AntConfigurer
             }
 
             if (!url.StartsWith("http://") && !url.StartsWith("https://"))
-            {
                 url = "http://" + url;
-            }
 
-            //Make an attempt to connect to monitoring service
+            // Make an attempt to connect to a monitoring service
             using (var client = new WebClient())
             {
                 client.Credentials = new NetworkCredential("bigfive", "1000000$");
@@ -582,7 +556,6 @@ namespace AntConfigurer
                     MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
 
                 JObject parsed = JObject.Parse(result);
                 var childrens = parsed.Children();
@@ -597,27 +570,21 @@ namespace AntConfigurer
                         JObject objValue;
                         
                         // Do something with sequenceEnum.Current.
-                        var current_element = sequenceEnum.Current as JProperty;
+                        var currentElement = sequenceEnum.Current as JProperty;
                         
-                        switch (current_element.Name)
+                        switch (currentElement.Name)
                         {
                             case "content":
-                                objValue = current_element.Value as JObject;
+                                objValue = currentElement.Value as JObject;
                                 if (objValue != null)
-                                {
                                     locationsAsJson = objValue["locations"] as JArray;
-
-                                }
                                 break;
                         }
 
-                        if (locationsAsJson != null)
-                        {
+                        if (locationsAsJson != null) 
                             break;
-                        }
                     }
                 }
-
                 asics_location.DataSource = null;
 
                 if (locationsAsJson == null)
@@ -630,19 +597,19 @@ namespace AntConfigurer
                 var parsedLocations = locationsAsJson.ToObject<List<Location>>();
                 var locationsListCtrl = asics_location;
                 var emptyLocation = new Location();
+                
                 emptyLocation.Id = 0;
                 emptyLocation.Name = "Select one";
-
                 parsedLocations.Insert(0, emptyLocation);
 
-                /*foreach(Location location in parsed_locations)
-                {
+                /*
+                foreach (Location location in parsed_locations)
                     asics_location.Items.Insert(location.id.ToString(), location.name);
-                }*/
+                */
+                
                 locationsListCtrl.DataSource = new BindingSource(parsedLocations, null);
                 locationsListCtrl.DisplayMember = "Name";
                 locationsListCtrl.ValueMember = "Id";
-
             }
         }
 
@@ -669,14 +636,16 @@ namespace AntConfigurer
             leftIpRange = leftIpRange.Trim();
             rightIpRange = rightIpRange.Trim();
 
-            /*var cmp = left_ip_range.CompareTo(right_ip_range);
+            /*
+            var cmp = left_ip_range.CompareTo(right_ip_range);
             if (cmp > 0)
             {
-                //Why are you trying to break me?
+                // Why are you trying to break me?
                 var tmp = left_ip_range;
                 left_ip_range = right_ip_range;
                 right_ip_range = tmp;
-            }*/
+            }
+            */
 
             var login = autodetector_login.Text;
             var pass = autodetector_pass.Text;
@@ -695,13 +664,12 @@ namespace AntConfigurer
             {
                 button.Enabled = false;
 
-                String[] leftOctets = leftIpRange.Split('.'),
-                         rightOctets = rightIpRange.Split('.');
+                String[] leftOctets = leftIpRange.Split('.');
+                String[] rightOctets = rightIpRange.Split('.');
 
                 var connector = new SshConnector();
-                //Console.WriteLine(left_ip_range);
-                //Console.WriteLine(right_ip_range);
-
+                // Console.WriteLine(left_ip_range);
+                // Console.WriteLine(right_ip_range);
 
                 for (var octet1 = Int32.Parse(leftOctets[0]); octet1 <= Int32.Parse(rightOctets[0]); octet1++)
                 {
@@ -724,10 +692,7 @@ namespace AntConfigurer
                                     ip2MacList.Add(currentIp, result);
                                     log.AppendText("Device found at IP: " + currentIp + " + with MAC address + '" + result + "'\r\n");
                                 }
-                                else
-                                {
-                                    Console.WriteLine("Device found, but it's not an ASIC device at " + currentIp);
-                                }
+                                else Console.WriteLine("Device found, but it's not an ASIC device at " + currentIp);
                             }
                         }
                     }
@@ -736,27 +701,23 @@ namespace AntConfigurer
                 var deviceTable = device_list_table;
                 var hnameUploadTable = hostname_upload_panel;
                 
-                //Clearing out old data
+                // Clearing out old data
                 while (deviceTable.Controls.Count > 0)
-                {
                     deviceTable.Controls[0].Dispose();
-                }
 
                 while (hnameUploadTable.Controls.Count > 0)
-                {
                     hnameUploadTable.Controls[0].Dispose();
-                }
 
-                //Resetting styles
+                // Resetting styles
                 deviceTable.RowCount = 0;
                 deviceTable.ColumnCount = 6;
-                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//Checkbox row
-                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//Num row
-                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC Detected IP
-                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));//ASIC Received IP
-                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));//ASIC MAC Addr
-                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//ASIC Confirmed
-                                                                                     //device_table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, F));//ASIC Confirmed
+                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Checkbox Row
+                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Num Row
+                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // ASIC Detected IP
+                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F)); // ASIC Received IP
+                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F)); // ASIC MAC Addr
+                deviceTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // ASIC Confirmed
+                // device_table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, F)); // ASIC Confirmed
 
                 deviceTable.RowCount = deviceTable.RowCount + 1;
                 deviceTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
@@ -765,7 +726,6 @@ namespace AntConfigurer
                 {
                     Name = "select_all_devices_checkbox"
                 };
-                
                 allSelect.Click += new System.EventHandler(this.All_select_click);
 
                 deviceTable.Controls.Add(allSelect, 0, deviceTable.RowCount - 1);
@@ -778,13 +738,13 @@ namespace AntConfigurer
                 hnameUploadTable.RowCount = 0;
                 hnameUploadTable.ColumnCount = 7;
 
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//Num row
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//Num row
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC Detected IP
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC Received IP
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));//ASIC MAC Addr
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));//ASIC Confirmed
-                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));//ASIC hostname
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Num Row
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Num Row
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // ASIC Detected IP
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // ASIC Received IP
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // ASIC MAC Addr
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // ASIC Confirmed
+                hnameUploadTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F)); // ASIC Hostname
 
                 hnameUploadTable.RowCount = hnameUploadTable.RowCount + 1;
                 hnameUploadTable.RowStyles.Add(new RowStyle(SizeType.AutoSize, 30F));
@@ -793,7 +753,6 @@ namespace AntConfigurer
                 {
                     Name = "select_all_devices_hname_checkbox"
                 };
-
                 allSelectHname.Click += new System.EventHandler(this.All_select_hname_click);
 
                 hnameUploadTable.Controls.Add(allSelectHname, 0, hnameUploadTable.RowCount - 1);
@@ -804,7 +763,7 @@ namespace AntConfigurer
                 hnameUploadTable.Controls.Add(new Label() { Text = "Device confirmed" }, 5, hnameUploadTable.RowCount - 1);
                 hnameUploadTable.Controls.Add(new Label() { Text = "ASIC hostname" }, 6, hnameUploadTable.RowCount - 1);
 
-                //var found_devices = UdpListener.GetDevices();
+                // var found_devices = UdpListener.GetDevices();
                 foreach (KeyValuePair<string, string> entry in ip2MacList)
                 {
                     deviceTable.RowCount = deviceTable.RowCount + 1;
@@ -845,7 +804,6 @@ namespace AntConfigurer
                 Console.WriteLine(exc.Message);
                 return;
             }
-
             log.AppendText("Total number of found devices: " + ip2MacList.Count + "\r\n");
 
             button.Enabled = true;
@@ -856,7 +814,7 @@ namespace AntConfigurer
             var button = sender as Button;
             var otherControls = hostname_upload_panel.Controls;
 
-            //Locking button
+            // Locking button
             button.Enabled = false;
 
             List<CheckBox> checkboxes = new List<CheckBox>();
@@ -867,10 +825,9 @@ namespace AntConfigurer
                 if (control.ToString().StartsWith("System.Windows.Forms.CheckBox"))
                 {
                     var chkbx = control as CheckBox;
+                    
                     if (!chkbx.Name.Equals("select_all_devices_hname_checkbox") && chkbx.Checked)
-                    {
                         checkboxes.Add(chkbx);
-                    }
                 }
             }
 
@@ -882,7 +839,6 @@ namespace AntConfigurer
             }
 
             hname_upload_stat_box.Text = "";
-
             var commonHostname = comm_hostname_text.Text;
             int i = 1;
             
@@ -902,8 +858,8 @@ namespace AntConfigurer
                     hname_upload_stat_box.AppendText("Couldn't parse an ip. IP was " + ipAddress + "\r\n");
                     continue;
                 }
-
                 String newHostname = "";
+                
                 if (String.IsNullOrWhiteSpace(commonHostname))
                 {
                     newHostname = (hostname_upload_panel.GetControlFromPosition(6, index) as TextBox).Text;
@@ -914,10 +870,7 @@ namespace AntConfigurer
                         continue;
                     }
                 }
-                else
-                {
-                    newHostname = commonHostname;
-                }
+                else newHostname = commonHostname;
 
                 element.SetIpAddress(ipAddress).SetHostname(newHostname);
                 hostnames.Add(element);
@@ -930,8 +883,8 @@ namespace AntConfigurer
                 return;
             }
 
-            String login = hname_upload_login.Text,
-                   pass = hname_upload_pass.Text;
+            String login = hname_upload_login.Text;
+            String pass = hname_upload_pass.Text;
 
             if (String.IsNullOrWhiteSpace(login))
             {
@@ -957,25 +910,23 @@ namespace AntConfigurer
 
                     hname_upload_stat_box.AppendText("Connection established. Starting network config upload to " + element.GetIpAddress() + "\r\n");
                     
-                    /*foreach (ConfigElement config in configs)
-                    {
+                    /*
+                    foreach (ConfigElement config in configs)
                         config.SetAsicIp(_current_ip).GenerateWorkerName(_current_ip);
-                    }*/
+                    */
                     var result = connector.UploadNetworkConfig(element, false);
                     
                     foreach (String line in result)
-                    {
                         hname_upload_stat_box.AppendText(line + "\r\n");
-                    }
                 }
                 catch (Exception exc)
                 {
                     var errorsAsString = "Uncatched error has occured while processing " + element.GetIpAddress() + ". Error was: " + exc.Message + ". Stack trace: " + exc.StackTrace + "\r\n";
-                    //MessageBox.Show(errors_as_string, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // MessageBox.Show(errors_as_string, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
                     hname_upload_stat_box.AppendText(errorsAsString);
                 }
             }
-
             button.Enabled = true;
         }
     }

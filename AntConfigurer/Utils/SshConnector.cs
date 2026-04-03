@@ -23,7 +23,7 @@ namespace AntConfigurer.Utils
         private List<String> _executionLog = new List<String>();
 
         private const String DefaultNetworkConfHname = "antMiner";
-        private const Boolean DefaulNetworkConfDhcp = true;
+        private const Boolean DefaultNetworkConfDhcp = true;
 
         public String GetIpAddress()
         {
@@ -105,21 +105,15 @@ namespace AntConfigurer.Utils
             this._errors.Clear();
 
             if (this._connectionEstablished && this._client.IsConnected)
-            {
                 return true;
-            }
 
             try
             {
                 if (!Strings.ValidateIpV4(this._ipAddress))
-                {
                     throw new Exception("An exception occured! SSH connection didn't receive an IP address");
-                }
 
                 if (String.IsNullOrWhiteSpace(this._username))
-                {
                     throw new Exception("An exception occured! No username was provided");
-                }
                 
                 ConnectionInfo connectionInfo = new ConnectionInfo(this._ipAddress, 22, this._username, new AuthenticationMethod[] { new PasswordAuthenticationMethod(this._username, this._password) });
                 connectionInfo.Timeout = new TimeSpan(0, 0, connectionTimeout);
@@ -161,9 +155,7 @@ namespace AntConfigurer.Utils
             var isConnectionEstablished = this.Connect();
             
             if (!isConnectionEstablished)
-            {
                 return false;
-            }
 
             try
             {
@@ -184,12 +176,9 @@ namespace AntConfigurer.Utils
             }
 
             if (this._client.IsConnected)
-            {
                 this.Disconnect();
-            }
 
             this._connectionEstablished = false;
-
             return this._errors.Count < 1;
         }
 
@@ -208,12 +197,12 @@ namespace AntConfigurer.Utils
 
             try
             {
-#if DEBUG
-                // String config_folder = "/home/asic/config/";
-                String configFolder = "/config/";
-#else
-                String config_folder = "/config/";
-#endif
+                #if DEBUG
+                    // String config_folder = "/home/asic/config/";
+                    String configFolder = "/config/";
+                #else
+                    String config_folder = "/config/";
+                #endif
                 
                 // Checking if the folder exists
                 String cmdText = "test -e " + configFolder + " && echo folder exists || echo no folder";
@@ -227,9 +216,7 @@ namespace AntConfigurer.Utils
                 result.Add(cmd.Result);
 
                 if (cmd.Result.StartsWith("no folder"))
-                {
                     throw new Exception("Folder with configs wasn't found");
-                }
 
                 cmdText = "test -e " + configFolder + "bmminer.conf && echo file exists || echo file not found";
                 cmd = this._client.CreateCommand(cmdText);
@@ -242,9 +229,7 @@ namespace AntConfigurer.Utils
                 result.Add(cmd.Result);
 
                 if (cmd.Result.StartsWith("file not found"))
-                {
                     throw new Exception("File with configs wasn't found");
-                }
 
                 cmdText = "/sbin/ifconfig | sed '1,1!d' | sed 's/.*HWaddr //' | sed 's/\\ .*//'";
                 cmd = this._client.CreateCommand(cmdText);
@@ -292,11 +277,11 @@ namespace AntConfigurer.Utils
 
             try
             {
-#if DEBUG
-                String configFolder = "/home/asic/config/";
-#else
-                String config_folder = "/config/";
-#endif
+                #if DEBUG
+                    String configFolder = "/home/asic/config/";
+                #else
+                    String config_folder = "/config/";
+                #endif
                 
                 // Checking if the folder exists
                 String cmdText = "test -e " + configFolder + " && echo folder exists || echo no folder";
@@ -310,9 +295,7 @@ namespace AntConfigurer.Utils
                 result.Add(cmd.Result);
 
                 if (cmd.Result.StartsWith("no folder"))
-                {
                     throw new Exception("Folder with configs wasn't found");
-                }
 
                 // Retrieving MAC address
                 cmdText = "/sbin/ifconfig | sed '1,1!d' | sed 's/.*HWaddr //' | sed 's/\\ .*//'";
@@ -327,26 +310,20 @@ namespace AntConfigurer.Utils
                 foreach (ConfigElement conf in configs)
                 {
                     if (String.IsNullOrWhiteSpace(conf.GetWorker()))
-                    {
                         conf.GenerateWorkerName(conf.GetAsicIp(), macAddr);
-                    }
+                    
                     else
                     {
                         String realWName = conf.GetWorker();
                         
                         if (!String.IsNullOrWhiteSpace(conf.GetPrefix()))
-                        {
                             realWName = conf.GetPrefix() + realWName;
-                        }
 
                         if (!String.IsNullOrWhiteSpace(conf.GetSuffix()))
-                        {
                             realWName += conf.GetSuffix();
-                        }
 
                         conf.SetWorker(realWName);
                     }
-
                 }
 
                 /*
@@ -407,12 +384,9 @@ namespace AntConfigurer.Utils
                         result.Add("Old configs were found and you don't want to override current. So, this device will be skipped");
                         
                         if (this._client.IsConnected)
-                        {
                             this.Disconnect();
-                        }
 
                         this._connectionEstablished = false;
-
                         return result;
                     }
 
@@ -488,7 +462,7 @@ namespace AntConfigurer.Utils
                     {
                         result.Add("No hostname file. Initializing with default and writing with our custom settings...");
                         networkConfiguration.Add("hostname", this._commonHname);
-                        networkConfiguration.Add("dhcp", DefaulNetworkConfDhcp.ToString());
+                        networkConfiguration.Add("dhcp", DefaultNetworkConfDhcp.ToString());
 
                         /*
                         cmd_text = "touch " + config_folder + "network.conf";
@@ -532,9 +506,7 @@ namespace AntConfigurer.Utils
                             var splittedConfigElement = splittedResult[ptr].Split('=');
                             
                             if (splittedConfigElement.Length == 2 && splittedConfigElement[0].Length > 0)
-                            {
                                 networkConfiguration[splittedConfigElement[0]] = splittedConfigElement[1];
-                            }
                         }
 
                         cmdText = "mv " + configFolder + "network.conf " + configFolder + "ntwrk.conf.backup";
@@ -551,9 +523,7 @@ namespace AntConfigurer.Utils
                     List<String> newNetworkConf = new List<string>();
                     
                     foreach (KeyValuePair<string, string> entry in networkConfiguration)
-                    {
                         newNetworkConf.Add(entry.Key + "=" + entry.Value);
-                    }
 
                     String newNetworkConfString = String.Join("\n", newNetworkConf) + "\n";
                     Console.WriteLine(newNetworkConfString);
@@ -592,7 +562,6 @@ namespace AntConfigurer.Utils
                 this.execution_log.Add("> Exit code: " + cmd.ExitStatus);
                 result.Add(cmd.Result);
                 */
-                
                 this._client.RunCommand("/sbin/shutdown -r now >/dev/null 2>&1");
 
                 this._lastFullConfig = fullConfig;
@@ -605,9 +574,7 @@ namespace AntConfigurer.Utils
             }
 
             if (this._client.IsConnected)
-            {
                 this.Disconnect();
-            }
 
             this._connectionEstablished = false;
 
@@ -616,12 +583,13 @@ namespace AntConfigurer.Utils
 
         public List<String> UploadNetworkConfig(HostnameElement config, Boolean overrideOldSettings = true)
         {
-            List<String> result = new List<string>();
             this._errors.Clear();
             this._executionLog.Clear();
             this._shouldNotifyMonitoring = false;
 
+            List<String> result = new List<string>();
             var isConnectionEstablished = this.Connect(300);
+            
             if (!isConnectionEstablished)
             {
                 this._errors.Add("Connection is not established");
@@ -630,11 +598,11 @@ namespace AntConfigurer.Utils
 
             try
             {
-#if DEBUG
-                String configFolder = "/home/asic/config/";
-#else
-                String config_folder = "/config/";
-#endif
+                #if DEBUG
+                    String configFolder = "/home/asic/config/";
+                #else
+                    String config_folder = "/config/";
+                #endif
                 
                 // Checking if the folder exists
                 String cmdText = "test -e " + configFolder + " && echo folder exists || echo no folder";
@@ -648,9 +616,7 @@ namespace AntConfigurer.Utils
                 result.Add(cmd.Result);
 
                 if (cmd.Result.StartsWith("no folder"))
-                {
                     throw new Exception("Folder with configs wasn't found");
-                }
 
                 // Retrieving MAC address
                 cmdText = "/sbin/ifconfig | sed '1,1!d' | sed 's/.*HWaddr //' | sed 's/\\ .*//'";
@@ -680,7 +646,7 @@ namespace AntConfigurer.Utils
                 {
                     result.Add("No hostname file. Initializing with default and writing with our custom settings...");
                     networkConfiguration.Add("hostname", config.GetHostname());
-                    networkConfiguration.Add("dhcp", DefaulNetworkConfDhcp.ToString());
+                    networkConfiguration.Add("dhcp", DefaultNetworkConfDhcp.ToString());
 
                     /*
                     cmd_text = "touch " + config_folder + "network.conf";
@@ -714,7 +680,6 @@ namespace AntConfigurer.Utils
                     this._executionLog.Add("> Exit code: " + cmd.ExitStatus);
 
                     var rawResult = cmd.Result;
-
                     Console.WriteLine(rawResult);
 
                     var splittedResult = cmd.Result.Split('\n');
@@ -724,9 +689,7 @@ namespace AntConfigurer.Utils
                         var splittedConfigElement = splittedResult[ptr].Split('=');
                         
                         if (splittedConfigElement.Length == 2 && splittedConfigElement[0].Length > 0)
-                        {
                             networkConfiguration[splittedConfigElement[0]] = splittedConfigElement[1];
-                        }
                     }
 
                     cmdText = "mv " + configFolder + "network.conf " + configFolder + "ntwrk.conf.backup";
@@ -743,9 +706,7 @@ namespace AntConfigurer.Utils
                 List<String> newNetworkConf = new List<string>();
                 
                 foreach (KeyValuePair<string, string> entry in networkConfiguration)
-                {
                     newNetworkConf.Add(entry.Key + "=" + entry.Value);
-                }
 
                 String newNetworkConfString = String.Join("\n", newNetworkConf) + "\n";
                 Console.WriteLine(newNetworkConfString);
@@ -793,12 +754,9 @@ namespace AntConfigurer.Utils
             }
 
             if (this._client.IsConnected)
-            {
                 this.Disconnect();
-            }
-
+            
             this._connectionEstablished = false;
-
             return result;
         }
     }

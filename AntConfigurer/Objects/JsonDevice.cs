@@ -11,7 +11,6 @@ namespace AntConfigurer.Objects
         public String Location { get; set; }
         public String Config { get; set; }
         
-        
         public JsonDevice() {}
 
         /// <summary> Generates class from CompletedConfig element </summary>
@@ -25,9 +24,7 @@ namespace AntConfigurer.Objects
             var simpleConfig = config.GetPoolConfigs().First();
             
             if (simpleConfig != null)
-            {
                 this.WorkerName = simpleConfig.GetWorker();
-            }
         }
     }
 }

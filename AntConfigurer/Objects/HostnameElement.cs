@@ -51,7 +51,6 @@ namespace AntConfigurer.Objects
         public Boolean Check()
         {
             this._errors = new List<string>();
-            
             return true;
         }
     }

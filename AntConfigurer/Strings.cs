@@ -13,26 +13,23 @@ namespace AntConfigurer
             ip = ip.Trim();
 
             if (String.IsNullOrWhiteSpace(ip))
-            {
                 errors.Add("Please, provide an IP address");
-            }
 
             char delimeter = '.';
             String[] octets = ip.Split(delimeter);
 
             if (octets.Length != 4)
-            {
                 errors.Add("Incorrect IP address");
-            } 
+            
             else
             {
                 Boolean correct = true;
                 Int16 maxValue = 255;
                 Int32 tmp;
                 
-                foreach(String octet in octets)
+                foreach (String octet in octets)
                 {
-                    if(octet.Length > 3)
+                    if (octet.Length > 3)
                     {
                         correct = false;
                         break;
@@ -56,9 +53,7 @@ namespace AntConfigurer
                 }
 
                 if (!correct)
-                {
                     errors.Add("Incorrect IP address");
-                }
             }
 
             Strings.LastErrors = errors;
@@ -68,14 +63,10 @@ namespace AntConfigurer
         public static String ZeroFill(String stringToFill, Int32 length = 3)
         {
             if (stringToFill.Length >= length)
-            {
                 return stringToFill;
-            }
 
             while(stringToFill.Length < length)
-            {
                 stringToFill = "0" + stringToFill;
-            }
 
             return stringToFill;
         }
@@ -88,14 +79,11 @@ namespace AntConfigurer
         public static Boolean CastStringToBoolean(String stringToCast)
         {
             if (String.IsNullOrWhiteSpace(stringToCast))
-            {
                 return false;
-            }
 
             switch (stringToCast.ToLower())
             {
-                case "true":
-                    return true;                    
+                case "true": return true;                    
             }
 
             return false;

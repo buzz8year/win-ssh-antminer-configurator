@@ -148,24 +148,18 @@ namespace AntConfigurer.Objects
             String newConfigString;
             
             if (escapeQuotes)
-            {
                 newConfigString = "{\"pools\": [";
-            }
-            else
-            {
-                newConfigString = "{'pools': [";
-            }
+            else newConfigString = "{'pools': [";
 
             int i = 0;
             
             foreach (ConfigElement singleConfig in this.PoolConfigs)
             {
                 if (i != 0)
-                {
                     newConfigString += ",";
-                }
 
                 newConfigString += "{";
+                
                 if (escapeQuotes)
                 {
                     newConfigString += "\"url\": \"" + singleConfig.GetUrl() + "\",";
@@ -280,7 +274,6 @@ namespace AntConfigurer.Objects
                         }
                     }
                 }
-                
                 // String random_stuff = parsed.GetValue("random_stuff").ToString();
             }
             catch (Exception e)
