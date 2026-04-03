@@ -151,7 +151,6 @@ namespace AntConfigurer.Utils
         {
             this._errors.Clear();
             this._executionLog.Clear();
-
             var isConnectionEstablished = this.Connect();
             
             if (!isConnectionEstablished)
@@ -496,7 +495,6 @@ namespace AntConfigurer.Utils
                         this._executionLog.Add("> Exit code: " + cmd.ExitStatus);
 
                         var rawResult = cmd.Result;
-
                         Console.WriteLine(rawResult);
 
                         var splittedResult = cmd.Result.Split('\n');
@@ -540,8 +538,8 @@ namespace AntConfigurer.Utils
 
                     result.Add("Changing network file access to 400...");
                     cmdText = "chmod 400 " + configFolder + "network.conf";
-                    cmd = this._client.CreateCommand(cmdText);
                     
+                    cmd = this._client.CreateCommand(cmdText);
                     this._executionLog.Add("> Command: " + cmdText);
                     cmd.Execute();
                     
@@ -678,7 +676,6 @@ namespace AntConfigurer.Utils
                     cmd.Execute();
                     
                     this._executionLog.Add("> Exit code: " + cmd.ExitStatus);
-
                     var rawResult = cmd.Result;
                     Console.WriteLine(rawResult);
 
@@ -732,7 +729,6 @@ namespace AntConfigurer.Utils
                 result.Add(cmd.Result);
 
                 result.Add("Sending restart command to miner...");
-                
                 /*
                 // cmd_text = "/etc/init.d/network.sh > /dev/null 2>&1";
                 cmd_text = "cd . && /etc/init.d/network.sh restart >/dev/null 2>&1 &";
